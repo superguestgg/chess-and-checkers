@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OnlyChess</title>
+	<style type="text/css">
+		body{
+		background-color: #dcb;
+
+		}
+		table{
+		width: 100%;
+		height: 100%;
+		margin-left: 0px;
+		overflow: hidden;
+		border-collapse: collapse;
+		}
+		td{
+		width: 50px;
+		height: 50px;
+		border: 2px solid #200;
+		align-content: center;
+
+		}
+		th{
+		width: 20px;
+		height: 20px;
+		}
+	</style>
+	<script type="text/javascript">
+		let massive=[["","a","b","c","d","e","f","g","h"],
+		["1","eleph1","horse1","officer1","king1","queen1","officer1", "horse1", "eleph1"],
+		["2","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1"],
+		["3","no","no","no","no","no","no","no","no"],
+		["4","no","no","no","no","no","no","no","no"],
+		["5","no","no","no","no","no","no","no","no"],
+		["6","no","no","no","no","no","no","no","no"],
+		["7","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2"],
+		["8","eleph2","horse2","officer2","king2","queen2","officer2", "horse2", "eleph2"],
+
+
+		]
+		function makestyle(){
+			const side = (((window.screen.width > window.screen.height) ? (window.screen.height) : (window.screen.width)) * 0.8);
+			alert(side);
+			style = document.createElement("style");
+			style.innerHTML = `
+			.chessboard{
+			background-image: url(https://lh3.google.com/u/0/d/1wMhPdxiHOBdC-kJMOOx2-b7uFdIUTbeP=w3000-h6489-iv2);
+			margin-top: 50px;
+			background-color: #daa;
+			width: ${side}px;
+			height: ${side}px;
+			border: 3px solid brown;
+			margin-left: ${(window.screen.width - side) / 2}px;
+
+		}
+
+			`
+			document.head.append(style);
+		}
+
+
+
+		makestyle();
+		function makeboard(){
+			let board="";
+			for (let i = 0; i<=8; i++){
+				board=board+"<tr><th>"+i+"</th>";
+				for (let j = 1; j<=8; j++){
+					if (i > 0){
+						board=board+"<td id='"+i+j+"' onclick='selectfigure(id)'>"+massive[i][j]+"</td>"
+					} else {
+						board=board+"<th>"+massive[i][j]+"</th>"
+
+					}
+
+				}
+				board=board+"</tr>";
+			}
+			document.getElementById("table").innerHTML = board;
+		}
+		selectnow=0;
+		function selectfigure(id){
+			selectnow=id;
+			document.getElementById(id).style="background-color: #000; border-radius: 200px;"
+
+		}
+	</script>
+</head>
+<body>
+	<div class="chessboard">
+		<table id="table">
+			<tr><th>a</th><th>b</th><th>c</th><th>d</th><th>e</th><th>f</th><th>g </th><th>h </th></tr>
+			<tr></tr>
+
+
+
+		</table>
+
+
+
+	</div>
+	<script type="text/javascript">
+		makeboard();
+
+	</script>
+</body>
+</html>
