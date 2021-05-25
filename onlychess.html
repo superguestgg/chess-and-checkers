@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>OnlyChess</title>
+	<link rel="shortcut icon" type="image/img" href="https://lh3.google.com/u/0/d/1nrLy3cVB-Dhh5cJUM0jL2ENFf6bLw2sW=w1920-h867-iv2">
 	<style type="text/css">
 		body{
 		background-color: #dcb;
@@ -27,23 +28,31 @@
 		width: 20px;
 		height: 20px;
 		}
+		.black{
+		background-color: #400;
+		opacity: 0.8;
+
+		}
+		.white{
+		background-color: #fcc;
+		opacity: 0.8;
+		}
 	</style>
 	<script type="text/javascript">
 		let massive=[["","a","b","c","d","e","f","g","h"],
-		["1","eleph1","horse1","officer1","king1","queen1","officer1", "horse1", "eleph1"],
-		["2","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1","pawn1"],
+		["1","1castle","1horse","1officer","1king","1queen","1officer", "1horse", "1castle"],
+		["2","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn"],
 		["3","no","no","no","no","no","no","no","no"],
 		["4","no","no","no","no","no","no","no","no"],
 		["5","no","no","no","no","no","no","no","no"],
 		["6","no","no","no","no","no","no","no","no"],
-		["7","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2","pawn2"],
-		["8","eleph2","horse2","officer2","king2","queen2","officer2", "horse2", "eleph2"],
+		["7","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn"],
+		["8","2castle","2horse","2officer","2king","2queen","2officer", "2horse", "2castle"],
 
 
 		]
 		function makestyle(){
 			const side = (((window.screen.width > window.screen.height) ? (window.screen.height) : (window.screen.width)) * 0.8);
-			alert(side);
 			style = document.createElement("style");
 			style.innerHTML = `
 			.chessboard{
@@ -70,7 +79,7 @@
 				board=board+"<tr><th>"+i+"</th>";
 				for (let j = 1; j<=8; j++){
 					if (i > 0){
-						board=board+"<td id='"+i+j+"' onclick='selectfigure(id)'>"+massive[i][j]+"</td>"
+						board=board+"<td id='"+i+j+"' onclick='selectfigure(id)' class='"+(( (i+j) % 2 == 0) ? ("white") : ("black")) +"'>"+massive[i][j]+"</td>"
 					} else {
 						board=board+"<th>"+massive[i][j]+"</th>"
 
@@ -81,15 +90,248 @@
 			}
 			document.getElementById("table").innerHTML = board;
 		}
-		selectnow=0;
+		let selectcell=0;
+		let selectfigurenow = "no";
 		function selectfigure(id){
-			selectnow=id;
-			document.getElementById(id).style="background-color: #000; border-radius: 200px;"
+			if (selectcell == 0) {
 
+				if ((massive[id[0]][id[1]] != "no") && ((massive[id[0]][id[1]])[0]==peoplenow)) {
+					selectcell=id;
+					selectfigurenow=massive[id[0]][id[1]];
+					document.getElementById(id).style="border-radius: 200px;"
+					forallfield()
+				} else {
+					selectcell=selectcell;
+				}
+			} else {
+				document.getElementById(selectcell).style="border-radius: 0px;"
+
+				if (id!=selectcell) {
+					maketurn(id);
+					selectcell= 0;
+					clearfield();
+
+				}
+				selectcell=0
+			}
+		}
+		function maketurn(id) {
+			if (canigothere(id)=="yes") {
+				massive[id[0]][id[1]]=massive[selectcell[0]][selectcell[1]];
+				document.getElementById(id).innerHTML=massive[id[0]][id[1]];
+
+				massive[selectcell[0]][selectcell[1]]="no";
+				document.getElementById(selectcell).innerHTML=massive[selectcell[0]][selectcell[1]];
+
+				changeturn();
+				selectcell=0;
+			} else {}
+		}
+		let turnnow = 1;
+		let peoplenow = 1;
+		function changeturn() {
+			turnnow++;
+			peoplenow = (peoplenow) % 2 + 1;
+			document.getElementById("turn").innerHTML=turnnow+"___"+ peoplenow;
+			selectcell=0;
+		}
+		function canigothere(id){
+			//let thiss=(selectfigurenow-selectfigurenow[0])
+			//alert(thiss);
+			if (selectfigurenow=="1pawn" || selectfigurenow=="2pawn") {
+				if (selectfigurenow[0]==1) {
+					/*где-то в условии ошибка*/
+					if ((id[0]-selectcell[0]==1 && id[1]-selectcell[1]==0 && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==1 && massive[id[0]][id[1]][0]==2 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1)) || id[1]==selectcell[1] && id[0]-selectcell[0]==2 && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]==2) && massive[id[0]][id[1]/1-1]=="no" && selectcell[0]==2) {
+						//alert(1);
+						return "yes";
+					} else {
+						return "no";
+					}
+
+					
+				} else {
+					if (id[0]-selectcell[0]==-1 && id[1]-selectcell[1]==0 && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==-1 && massive[id[0]][id[1]][0]==1 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1) || id[1]==selectcell[1] && id[0]-selectcell[0]==-2 && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]==1) && massive[id[0]/1+1][id[1]]=="no" && selectcell[0]==7) {
+						//alert(2);
+						return "yes";
+					} else {
+						return "no";
+					}
+
+				}
+			} else if (selectfigurenow=="1castle" || selectfigurenow=="2castle") {
+				if (selectfigurenow[0]==1) {
+					if ((selectcell[0]==id[0]) && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]=="2")) {
+						matter="yes"
+						if (id[1] > selectcell[1]) {
+							for (let i = selectcell[1]/1+1; i < id[1]; i++){
+								if (massive[id[0]][i]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						} else if (id[1] < selectcell[1]) {
+							for (let i = id[1]/1+1; i < selectcell[1]; i++){
+								if (massive[id[0]][i]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						}
+						return matter;
+
+					} else if ((selectcell[1]==id[1]) && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]=="2")) {
+
+						matter="yes"
+						if (id[0] > selectcell[0]) {
+							for (let i = selectcell[0]/1+1; i < id[0]; i++){
+
+								if (massive[i][id[1]]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						} else if (id[0] < selectcell[0]) {
+							for (let i = id[0]/1+1; i < selectcell[0]; i++){
+								if (massive[i][id[1]]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						}
+						return matter;
+					} else {
+						return "no";
+					}
+
+					
+				} else {
+					if ((selectcell[0]==id[0]) && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]=="1")) {
+						matter="yes"
+						if (id[1] > selectcell[1]) {
+							for (let i = selectcell[1]/1+1; i < id[1]; i++){
+								if (massive[id[0]][i]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						} else if (id[1] < selectcell[1]) {
+							for (let i = id[1]/1+1; i < selectcell[1]; i++){
+								if (massive[id[0]][i]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						}
+						return matter;
+
+					} else if ((selectcell[1]==id[1]) && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]=="1")) {
+
+						matter="yes"
+						if (id[0] > selectcell[0]) {
+							for (let i = selectcell[0]/1+1; i < id[0]; i++){
+
+								if (massive[i][id[1]]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						} else if (id[0] < selectcell[0]) {
+							for (let i = id[0]/1+1; i < selectcell[0]; i++){
+								if (massive[i][id[1]]!="no"){
+									matter="no"
+								}
+									
+
+							}
+						}
+						return matter;
+					} else {
+						return "no";
+					}
+
+				}
+			} else if (selectfigurenow=="1horse" || selectfigurenow=="2horse") {
+				if (((selectcell[0] - id[0]==1 || selectcell[0] - id[0]==-1) && (selectcell[1] - id[1]==2 || selectcell[1] - id[1]==-2) || (selectcell[0] - id[0]==2 || selectcell[0] - id[0]==-2) && (selectcell[1] - id[1]==1 || selectcell[1] - id[1]==-1)) && massive[id[0]][id[1]][0]!=selectfigurenow[0]) {
+					return "yes";
+				} else {
+					return "no";
+				}
+
+			} else if (selectfigurenow=="1officer" || selectfigurenow=="2officer") {
+				if ((id[0]-selectcell[0]==id[1]-selectcell[1] || id[0]-selectcell[0]==-id[1]/1+selectcell[1]/1) && massive[id[0]][id[1]][0]!=selectfigurenow[0]) {
+					let matter = "yes";
+					if (id[0]>selectcell[0]) {
+						if (id[1]>selectcell[1]){
+							for (let i = selectcell[0]+1; i < id[0]; i++) {
+								j=i-selectcell[0]+selectcell[1]
+								if (massive[i][j]!="no") {
+									matter = "no";
+								}
+							}	
+						} else if (id[1]<selectcell[1]){
+							for (let i = selectcell[0]+1; i < id[0]; i++) {
+								j=i-selectcell[0]+id[1]
+								if (massive[i][j]!="no") {
+									matter = "no";
+								}
+							}	
+						}
+					} else if (id[0]<selectcell[0]) {
+						if (id[1]>selectcell[1]){
+							for (let i = id[0]+1; i < id[0]; i++) {
+								j=i-id[0]+selectcell[1]
+								if (massive[i][j]!="no") {
+									matter = "no";
+								}
+							}	
+						} else if (id[1]<selectcell[1]){
+							for (let i = id[0]+1; i < id[0]; i++) {
+								j=i-id[0]+id[1]
+								if (massive[i][j]!="no") {
+									matter = "no";
+								}
+							}	
+						}
+					}
+					return matter
+				} else {
+					return "no"
+				}
+			}
+
+		}
+		function forallfield(){
+			for (let i = 1; i<=8; i++){
+				for (let j = 1; j<=8; j++){
+					if (canigothere(i+""+j)=="yes") {
+						document.getElementById(i+""+j).style="border: 7px solid black";
+					} else {
+						document.getElementById(i+""+j).style="border: 2px solid #200";
+
+					}
+				}
+			}
+		}
+		function clearfield(){
+			for (let i = 1; i<=8; i++){
+				for (let j = 1; j<=8; j++){
+					document.getElementById(i+""+j).style="border: 2px solid #200";
+
+					
+				}
+			}
 		}
 	</script>
 </head>
 <body>
+	<div class="turn" id="turn"></div>
 	<div class="chessboard">
 		<table id="table">
 			<tr><th>a</th><th>b</th><th>c</th><th>d</th><th>e</th><th>f</th><th>g </th><th>h </th></tr>
@@ -104,6 +346,7 @@
 	</div>
 	<script type="text/javascript">
 		makeboard();
+		document.getElementById("turn").innerHTML=turnnow+"___"+ peoplenow;
 
 	</script>
 </body>
