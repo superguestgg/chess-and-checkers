@@ -65,6 +65,12 @@
 			margin-left: ${(window.screen.width - side) / 2}px;
 
 		}
+		img{
+			width: ${side/10}px;
+			height: ${side/10}px;
+			opacity: 1;
+
+		}
 
 			`
 			document.head.append(style);
@@ -98,7 +104,7 @@
 				if ((massive[id[0]][id[1]] != "no") && ((massive[id[0]][id[1]])[0]==peoplenow)) {
 					selectcell=id;
 					selectfigurenow=massive[id[0]][id[1]];
-					document.getElementById(id).style="border-radius: 200px;"
+					document.getElementById(id).style="border-radius: 2000px;"
 					forallfield()
 				} else {
 					selectcell=selectcell;
@@ -125,6 +131,7 @@
 
 				changeturn();
 				selectcell=0;
+				upgradefield()
 			} else {}
 		}
 		let turnnow = 1;
@@ -140,8 +147,8 @@
 			//alert(thiss);
 			if (selectfigurenow=="1pawn" || selectfigurenow=="2pawn") {
 				if (selectfigurenow[0]==1) {
-					/*где-то в условии ошибка*/
-					if ((id[0]-selectcell[0]==1 && id[1]-selectcell[1]==0 && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==1 && massive[id[0]][id[1]][0]==2 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1)) || id[1]==selectcell[1] && id[0]-selectcell[0]==2 && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]==2) && massive[id[0]][id[1]/1-1]=="no" && selectcell[0]==2) {
+					/*где-то в условии ошибка(исправлено)*/
+					if ((id[0]-selectcell[0]==1 && id[1]==selectcell[1] && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==1 && massive[id[0]][id[1]][0]==2 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1)) || id[1]==selectcell[1] && id[0]-selectcell[0]==2 && (massive[id[0]][id[1]]=="no") && massive[id[0]-1][id[1]]=="no" && selectcell[0]==2) {
 						//alert(1);
 						return "yes";
 					} else {
@@ -150,7 +157,7 @@
 
 					
 				} else {
-					if (id[0]-selectcell[0]==-1 && id[1]-selectcell[1]==0 && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==-1 && massive[id[0]][id[1]][0]==1 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1) || id[1]==selectcell[1] && id[0]-selectcell[0]==-2 && (massive[id[0]][id[1]]=="no" || massive[id[0]][id[1]][0]==1) && massive[id[0]/1+1][id[1]]=="no" && selectcell[0]==7) {
+					if (id[0]-selectcell[0]==-1 && id[1]-selectcell[1]==0 && massive[id[0]][id[1]]=="no" || id[0]-selectcell[0]==-1 && massive[id[0]][id[1]][0]==1 && massive[id[0]][id[1]]!="no" && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1) || id[1]==selectcell[1] && id[0]-selectcell[0]==-2 && (massive[id[0]][id[1]]=="no") && massive[id[0]/1+1][id[1]]=="no" && selectcell[0]==7) {
 						//alert(2);
 						return "yes";
 					} else {
@@ -269,15 +276,15 @@
 					let matter = "yes";
 					if (id[0]>selectcell[0]) {
 						if (id[1]>selectcell[1]){
-							for (let i = selectcell[0]+1; i < id[0]; i++) {
-								j=i-selectcell[0]+selectcell[1]
+							for (let i = selectcell[0]/1+1; i < id[0]; i++) {
+								j=i/1-selectcell[0]/1+selectcell[1]/1
 								if (massive[i][j]!="no") {
 									matter = "no";
 								}
 							}	
 						} else if (id[1]<selectcell[1]){
-							for (let i = selectcell[0]+1; i < id[0]; i++) {
-								j=i-selectcell[0]+id[1]
+							for (let i = selectcell[0]/1+1; i < id[0]; i++) {
+								j=-i+selectcell[0]/1+selectcell[1]/1
 								if (massive[i][j]!="no") {
 									matter = "no";
 								}
@@ -285,15 +292,18 @@
 						}
 					} else if (id[0]<selectcell[0]) {
 						if (id[1]>selectcell[1]){
-							for (let i = id[0]+1; i < id[0]; i++) {
-								j=i-id[0]+selectcell[1]
+							for (let i = id[0]/1+1; i < selectcell[0]; i++) {
+								j=-i+id[0]/1+id[1]/1;
+								//console.log(i+""+j)
+
 								if (massive[i][j]!="no") {
+									//console.log("suck")
 									matter = "no";
 								}
 							}	
 						} else if (id[1]<selectcell[1]){
-							for (let i = id[0]+1; i < id[0]; i++) {
-								j=i-id[0]+id[1]
+							for (let i = id[0]/1+1; i < selectcell[0]; i++) {
+								j=i-id[0]/1+id[1]/1
 								if (massive[i][j]!="no") {
 									matter = "no";
 								}
@@ -304,6 +314,35 @@
 				} else {
 					return "no"
 				}
+			}
+			else if (selectfigurenow=="1king" || selectfigurenow=="2king") {
+				if (massive[id[0]][id[1]][0]!=1 && (id[0]-selectcell[0]==1 || id[0]-selectcell[0]==-1 || id[0]-selectcell[0]==0) && (id[1]-selectcell[1]==1 || id[1]-selectcell[1]==-1 || id[1]-selectcell[1]==0)) {
+					return "yes";
+				} else {
+					return "no";
+				}
+			} else if (selectfigurenow=="1queen" || selectfigurenow=="2queen") {
+				selectfigurenow=selectfigurenow[0]+"castle";
+				if (canigothere(id)=="yes"){
+					selectfigurenow=selectfigurenow[0]+"queen";
+					alert("suck")
+
+					return "yes";
+
+				} else {
+					selectfigurenow=selectfigurenow[0]+"officer";
+
+					if (canigothere(id)=="yes") {
+						selectfigurenow=selectfigurenow[0]+"queen";
+
+						return "yes";
+					} else {
+						return "no";
+					}
+				} 
+				selectfigurenow=selectfigurenow[0]+"queen";
+
+
 			}
 
 		}
@@ -328,6 +367,53 @@
 				}
 			}
 		}
+		function upgradefield(){
+			for (let i = 1; i<=8; i++){
+				for (let j = 1; j<=8; j++){
+					if (massive[i][j]=="no") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="1pawn") {
+						document.getElementById(i+""+j).innerHTML='<img src="https://sun3-10.userapi.com/JSbOFuHrMWdMupGpyRekgPLCGQazDJMIMYSm_g/8EvqM-hej14.png" alt="https://lh3.google.com/u/0/d/1QKAwEyL3sE6vGu4T4_4ATtTjjVyQmM7M=w1920-h781-iv1">';
+
+					} else if (massive[i][j]=="2pawn") {
+						document.getElementById(i+""+j).innerHTML='<img src="https://lh3.google.com/u/0/d/1_xU0MX9z_JXAinbFBUZl-zbOMg5RzMSF=w1920-h867-iv2" alt="https://lh3.google.com/u/0/d/1QKAwEyL3sE6vGu4T4_4ATtTjjVyQmM7M=w1920-h781-iv1">';
+
+					} /*else if (massive[i][j]=="1castle") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="2castle") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="1horse") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="2horse") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="1officer") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="2officer") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="1king") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="2king") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="1queen") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					} else if (massive[i][j]=="2queen") {
+						document.getElementById(i+""+j).innerHTML="";
+
+					}*/
+				}
+			}
+
+		}
 	</script>
 </head>
 <body>
@@ -347,6 +433,7 @@
 	<script type="text/javascript">
 		makeboard();
 		document.getElementById("turn").innerHTML=turnnow+"___"+ peoplenow;
+		upgradefield()
 
 	</script>
 </body>
