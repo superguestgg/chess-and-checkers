@@ -37,6 +37,58 @@
 		background-color: #fcc;
 		opacity: 0.8;
 		}
+		.blackwhenselect{
+		background-color: #000;
+		opacity: 1;
+		border: 2px solid #ff5e00;
+		}
+		.whitewhenselect{
+		background-color: #fff;
+		opacity: 1;
+		border: 2px solid #ff5e00;
+		}
+
+		.turnmobile{
+		width: 100%;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		border-bottom: 3px solid #231009;
+		background-color: #a24d2c; 
+		font-size: 20px;
+		height: 50px;
+		z-index: 1000;
+		padding: 5px;
+		padding-left: 15px;
+		}
+		.turncomputer{
+		width: 200px;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		border-right: 3px solid #231009;
+		background-color: #a24d2c; 
+		font-size: 20px;
+		height: 100%;
+		z-index: 1000;
+		padding: 30px;
+		padding-left: 5px;
+		padding-right: 5px;
+
+		}
+		.icangothere{
+		width: 20px;
+		height: 20px;
+		border-radius: 200px;
+		background-color: #fff;
+		border: 2px solid black;
+		margin: auto;
+		z-index: 500;
+		position: unset;
+		}
+		.imgdangerous{
+			
+		}
 	</style>
 	<script type="text/javascript">
 		let massive=[["","a","b","c","d","e","f","g","h"],
@@ -66,21 +118,23 @@
 
 		}
 		img{
-		width: ${side/10}px;
-		height: ${side/10}px;
+		width: ${side/9-6}px;
+		height: ${side/9-6}px;
 		opacity: 1;
-
+		align: center;
+		margin: auto;
+		border-radius: 5px;
 		}
 		td{
-		width: ${side/9-2}px;
-		height: ${side/9-2}px;
+		width: ${side/9-4}px;
+		height: ${side/9-4}px;
 		border: 2px solid #200;
 		align-content: center;
 
 		}
 		th{
-		width: ${side/9-2}px;
-		height: ${side/9-2}px;
+		width: ${side/9-4}px;
+		height: ${(side/9-4)/2}px;
 		border: 0px solid #200;
 		align-content: center;
 
@@ -88,7 +142,8 @@
 		}
 
 			`
-			document.head.append(style);
+		document.head.append(style);
+
 		}
 
 
@@ -116,16 +171,16 @@
 		function selectfigure(id){
 			if (selectcell == 0) {
 
-				if ((massive[id[0]][id[1]] != "no") && ((massive[id[0]][id[1]])[0]==peoplenow)) {
+				if ((massive[id[0]][id[1]])[0]==peoplenow) {
 					selectcell=id;
 					selectfigurenow=massive[id[0]][id[1]];
-					document.getElementById(id).style="border-radius: 2000px;"
-					forallfield()
+					document.getElementById(id).className=document.getElementById(id).className+"whenselect";
+					forallfield();
 				} else {
 					selectcell=selectcell;
 				}
 			} else {
-				document.getElementById(selectcell).style="border-radius: 0px;"
+				document.getElementById(selectcell).className=document.getElementById(selectcell).className[0]+document.getElementById(selectcell).className[1]+document.getElementById(selectcell).className[2]+document.getElementById(selectcell).className[3]+document.getElementById(selectcell).className[4];
 
 				if (id!=selectcell) {
 					maketurn(id);
@@ -154,7 +209,7 @@
 		function changeturn() {
 			turnnow++;
 			peoplenow = (peoplenow) % 2 + 1;
-			document.getElementById("turn").innerHTML=turnnow+"___"+ peoplenow;
+			document.getElementById("turn").innerHTML="сейчас ход номер: "+turnnow+"<br>ходит игрок номер: "+ peoplenow;
 			selectcell=0;
 		}
 		function canigothere(id){
@@ -309,10 +364,8 @@
 						if (id[1]>selectcell[1]){
 							for (let i = id[0]/1+1; i < selectcell[0]; i++) {
 								j=-i+id[0]/1+id[1]/1;
-								//console.log(i+""+j)
 
 								if (massive[i][j]!="no") {
-									//console.log("suck")
 									matter = "no";
 								}
 							}	
@@ -337,15 +390,14 @@
 					return "no";
 				}
 			} else if (selectfigurenow=="1queen" || selectfigurenow=="2queen") {
-				selectfigurenow=selectfigurenow[0]+"castle";
-				if (canigothere(id)=="yes"){
-					selectfigurenow=selectfigurenow[0]+"queen";
-					alert("suck")
+				selectfigurenow=selectfigurenow[0]+"officer";
+				if (canigothere(id)=="no") {
 
 					return "yes";
+					selectfigurenow=selectfigurenow[0]+"queen";
 
-				} else {
-					selectfigurenow=selectfigurenow[0]+"officer";
+				} else if (canigothere(id)=="yes") {
+					selectfigurenow=selectfigurenow[0]+"castle";
 
 					if (canigothere(id)=="yes") {
 						selectfigurenow=selectfigurenow[0]+"queen";
@@ -365,9 +417,9 @@
 			for (let i = 1; i<=8; i++){
 				for (let j = 1; j<=8; j++){
 					if (canigothere(i+""+j)=="yes") {
-						document.getElementById(i+""+j).style="border: 7px solid black";
+						document.getElementById(i+""+j).innerHTML+= "<div class='icangothere'></div>";
 					} else {
-						document.getElementById(i+""+j).style="border: 2px solid #200";
+						document.getElementById(i+""+j).innerHTML=document.getElementById(i+""+j).innerHTML.replace("<div class='icangothere'></div>", "");
 
 					}
 				}
@@ -376,7 +428,7 @@
 		function clearfield(){
 			for (let i = 1; i<=8; i++){
 				for (let j = 1; j<=8; j++){
-					document.getElementById(i+""+j).style="border: 2px solid #200";
+					document.getElementById(i+""+j).innerHTML=document.getElementById(i+""+j).innerHTML.replace("<div class='icangothere'></div>", "");
 
 					
 				}
@@ -447,9 +499,14 @@
 	</div>
 	<script type="text/javascript">
 		makeboard();
-		document.getElementById("turn").innerHTML=turnnow+"___"+ peoplenow;
+		document.getElementById("turn").innerHTML="сейчас ход номер: "+turnnow+"<br>ходит игрок номер: "+ peoplenow;
 		upgradefield()
+		if (window.screen.width < window.screen.height) {
+			document.getElementById("turn").className="turnmobile"
+		} else {
+			document.getElementById("turn").className="turncomputer"
 
+		}
 	</script>
 </body>
 </html>
