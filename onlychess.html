@@ -104,9 +104,49 @@
 		padding: 5px;
 		
 		}
+
+
+
+		.gamemenu{
+		position: fixed;
+		width: 80%;
+		height: 60%;
+		top: 20%;
+		left: 10%;
+		background-color: #987;
+		color: black;
+		border: 3px solid black;
+		padding: 10px;
+		overflow: visible;
+		z-index: 2000;
+		transition: 0.5s ease-out;
+		}
+		.menubutton{
+		width: 80%;
+		margin: auto;
+		background-color: #987;
+		color: black;
+		border-bottom: 3px solid black;
+		margin-top: 10px;
+		font-size: 30px;
+		padding: 5px;
+		text-align: center;
+		}
 	</style>
 	<script type="text/javascript">
-		let massive=[["","a","b","c","d","e","f","g","h"],
+		/*let massive=[["","a","b","c","d","e","f","g","h"],
+		["1","1castle","1horse","1officer","1king","1queen","1officer", "1horse", "1castle"],
+		["2","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn"],
+		["3","no","no","no","no","no","no","no","no"],
+		["4","no","no","no","no","no","no","no","no"],
+		["5","no","no","no","no","no","no","no","no"],
+		["6","no","no","no","no","no","no","no","no"],
+		["7","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn","2pawn"],
+		["8","2castle","2horse","2officer","2king","2queen","2officer", "2horse", "2castle"],
+
+
+		]*/
+		const massivesave=[["","a","b","c","d","e","f","g","h"],
 		["1","1castle","1horse","1officer","1king","1queen","1officer", "1horse", "1castle"],
 		["2","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn","1pawn"],
 		["3","no","no","no","no","no","no","no","no"],
@@ -118,10 +158,10 @@
 
 
 		]
+		massive = massivesave;
 		themeoffigures=0;
 		function changethemeoffigures(){
 			themeoffigures=(themeoffigures+1)%2;
-			alert(themeoffigures);
 			upgradefield();
 		}
 
@@ -176,10 +216,51 @@
 
 
 		makestyle();
+		function startnewgame(){
+			turnnow = 1;
+			peoplenow = 1;
+			massive[0][0]+=1;
+			massive=massivesave;
+			makeboard();
+			upgradefield();
+			document.getElementById("gamemenu").style.top="100%";
+			document.getElementById("gamemenu").style.transform="rotate(720deg)";
+
+		}
+		function endgame(){
+			document.getElementById("gamemenu").style.top="20%";
+
+		}
+		function gameended(){
+			let king1="no";
+			let king2="no";
+			for (let i = 1; i<=8; i++){
+				for (let j = 1; j<=8; j++){
+					if (massive[i][j]=="1king"){
+						king1="yes";
+					} else if (massive[i][j]=="2king") {
+						king2="yes";
+					}
+
+
+				}
+
+			}
+			if (king1=="yes" && king2=="yes"){
+				return "yes";
+			} else {
+				endgame();
+				return "no";
+			}
+		}
 		function makeboard(){
 			let board="";
 			for (let i = 0; i<=8; i++){
-				board=board+"<tr><th>"+i+"</th>";
+				if (i!=0){
+					board=board+"<tr><th>"+i+"</th>";
+				} else {
+					board=board+"<tr><th>"+"</th>"
+				}
 				for (let j = 1; j<=8; j++){
 					if (i > 0){
 						board=board+"<td id='"+i+j+"' onclick='selectfigure(id)' class='"+(( (i+j) % 2 == 0) ? ("white") : ("black")) +"'>"+massive[i][j]+"</td>"
@@ -230,6 +311,7 @@
 				changeturn();
 				selectcell=0;
 				upgradefield()
+				gameended()
 			} else {}
 		}
 		let turnnow = 1;
@@ -519,6 +601,12 @@
 </head>
 <body>
 	<div class="turn" id="turn"></div>
+	<div class="gamemenu" id="gamemenu">
+		<div class="menubutton" id="start" onclick="startnewgame()">start new game</div>
+		<div class="menubutton" id="start" onclick="alert('no')">statistics</div>
+		<div class="menubutton" id="start" onclick='document.location.href = "https://superguestgg.github.io"'>exit</div>
+	</div>
+
 	<div id="changethemeoffiguresid" onclick="changethemeoffigures()" class="changethemeoffiguresclass">поменять фигуры</div>
 	<div class="chessboard" id="chessboard">
 		<table id="table">
